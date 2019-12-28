@@ -31,7 +31,7 @@ echo("tesuya")
 
 class TestGhidraJythonRepl(unittest.TestCase):
     def setUp(self):
-        self.jython = GhidraJythonRepl(os.environ['GHIDRA_HOME'])
+        self.jython = GhidraJythonRepl()
 
     def test_repl(self):
         for test, expect in TEST_CASES.items():
