@@ -25,10 +25,10 @@ def execute(cmd):
 class GhidraJythonRepl:
     def __init__(self, ghidra_home=None):
         
-        # those paths come from "$GHIDRA_HOME/support/launch.sh"
-        # User must define "GHIDRA_HOME" for Ghidra's installation directory
-        # i.e. GHIDRA_HOME=/path/to/ghidra_9.1_PUBLIC
-        self.INSTALL_DIR = Path(ghidra_home or os.environ['GHIDRA_HOME'])
+        # those paths come from "$GHIDRA_INSTALL_DIR/support/launch.sh"
+        # User must define "GHIDRA_INSTALL_DIR" for Ghidra's installation directory
+        # i.e. GHIDRA_INSTALL_DIR=/path/to/ghidra_9.1_PUBLIC
+        self.INSTALL_DIR = Path(ghidra_home or os.environ['GHIDRA_INSTALL_DIR'])
 
         self._java_home = None
         self._java_vmargs = None

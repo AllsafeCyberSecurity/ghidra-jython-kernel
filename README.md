@@ -8,14 +8,14 @@ Jupyter kernel for Ghidra's Jython.
 ```bash
 $ pip install ghidra-jython-kernel
 
-# make sure GHIDRA_HOME is defined
+# make sure GHIDRA_INSTALL_DIR is defined
 # don't forget to add this line in your shell config (i.e. bashrc, zshrc)
-$ export GHIDRA_HOME=/path/to/your/ghidra_installation_folder
+$ export GHIDRA_INSTALL_DIR=/path/to/your/ghidra_installation_folder
 ```
 
 ## Usage
 
-Run your Jupyter, and select `GhidraJython` named kernel.
+Run your Jupyter(`jupyter notebook`), and select `GhidraJython` named kernel.
 
 
 Note that, unlike GHidraPython plugin's interpreter, in the context the current running Jython interpreter, you have to import program by yourself. This means, pre-initialized variables in GhidraScript, like `currentProgram` or `state`, aren't available unless you import manually. You can import programs as following.
