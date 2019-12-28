@@ -2,20 +2,16 @@ import ast
 import json
 import os
 import re
+import shutil
 import sys
 from pathlib import Path
 from distutils.command.install import install
-from IPython.utils.tempdir import TemporaryDirectory
+from tempfile import mkdtemp, TemporaryDirectory
 
 try:
     from setuptools import setup, find_packages
 except ImportError:
     from distutils.core import setup, find_packages
-
-try:
-    from jupyter_client.kernelspec import install_kernel_spec
-except ImportError:
-    from IPython.kernel.kernelspec import install_kernel_spec
 
 MYPACKAGE_ROOT = 'ghidra_jython_kernel'
 
@@ -31,6 +27,59 @@ KERNELSPEC_JSON = {
     'name': 'ghidra_jython_kernel'
 }
 
+def get_home_dir():
+    homedir = os.path.expanduser('~')
+    homedir = os.path.realpath(homedir)
+    return homedir
+
+def jupyter_config_dir():
+    env = os.environ
+    home_dir = get_home_dir()
+
+    if env.get('JUPYTER_NO_CONFIG'):
+        return Path(mkdtemp(prefix='jupyter-clean-cfg' + '-'))
+
+    if env.get('JUPYTER_CONFIG_DIR'):
+        return Path(env['JUPYTER_CONFIG_DIR'])
+
+    return Path(home_dir, '.jupyter')
+
+def get_jupyter_data_dir():
+    env = os.environ
+
+    if env.get('JUPYTER_DATA_DIR'):
+        return Path(env['JUPYTER_DATA_DIR'])
+
+    home = get_home_dir()
+
+    if sys.platform == 'darwin':
+        return Path(home, 'Library', 'Jupyter')
+    elif os.name == 'nt':
+        appdata = env.get('APPDATA', None)
+        if appdata:
+            return Path(appdata, 'jupyter')
+        else:
+            return Path(jupyter_config_dir(), 'data')
+    else:
+        # Linux, non-OS X Unix, AIX, etc.
+        xdg = env.get("XDG_DATA_HOME", None)
+        if not xdg:
+            xdg = Path(home, '.local', 'share')
+        return Path(xdg, 'jupyter')
+
+def install_kernelspec(source_dir, kernel_name):
+    source_dir = source_dir.rstrip('/\\')
+    if not kernel_name:
+        kernel_name = os.path.basename(source_dir)
+    kernel_name = kernel_name.lower()
+
+    destination = Path(get_jupyter_data_dir() / 'kernels', kernel_name)
+
+    if destination.is_dir():
+        shutil.rmtree(str(destination))
+
+    shutil.copytree(source_dir, str(destination))
+
 
 class install_with_kernelspec(install):
     def run(self):
@@ -40,10 +89,7 @@ class install_with_kernelspec(install):
                 json.dump(KERNELSPEC_JSON, f, sort_keys=True)
 
             kernel_name = KERNELSPEC_JSON['name']
-            try:
-                install_kernel_spec(td, kernel_name, user=True, replace=True)
-            except:
-                install_kernel_spec(td, kernel_name, user=False, replace=True)
+            install_kernelspec(td, kernel_name)
 
 
 # get version
@@ -54,14 +100,16 @@ version = str(ast.literal_eval(match.group(1)))
 
 def main():
     setup(
-        name='ghidra_jython_kernel',
+        name='ghidra-jython-kernel',
         version=version,
         description='Jupyter kernel for Ghidra\'s Jython Interpreter',
         author='er28-0652',
+        author_email='33626923+er28-0652@users.noreply.github.com',
         license='MIT',
         cmdclass={'install': install_with_kernelspec},
         install_requires=[
             'IPython',
+            'ipykernel',
             'jupyter_client'
         ],
         packages=find_packages(),
