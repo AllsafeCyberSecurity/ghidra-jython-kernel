@@ -101,7 +101,7 @@ version = str(ast.literal_eval(match.group(1)))
 def main():
     setup(
         name='ghidra-jython-kernel',
-        version=version,
+        version='0.0.4',
         description='Jupyter kernel for Ghidra\'s Jython Interpreter',
         author='er28-0652',
         author_email='33626923+er28-0652@users.noreply.github.com',
