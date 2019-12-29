@@ -18,7 +18,7 @@ $ export GHIDRA_INSTALL_DIR=/path/to/your/ghidra_installation_folder
 Run your Jupyter(`jupyter notebook`), and select `GhidraJython` named kernel.
 
 
-Note that, unlike GHidraPython plugin's interpreter, in the context the current running Jython interpreter, you have to import program by yourself. This means, pre-initialized variables in GhidraScript, like `currentProgram` or `state`, aren't available unless you import manually. You can import programs as following.
+Note that, unlike GhidraPython plugin's interpreter, in the context the current running Jython interpreter, you have to import program by yourself. This means, pre-initialized variables in GhidraScript, like `currentProgram` or `state`, aren't available unless you import manually. You can import programs as following.
 
 ```python
 from ghidra.app.util.importer import MessageLog, AutoImporter
