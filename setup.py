@@ -92,12 +92,6 @@ class install_with_kernelspec(install):
             install_kernelspec(td, kernel_name)
 
 
-# get version
-with open(os.path.join(MYPACKAGE_ROOT, '__init__.py')) as f:
-    match = re.search(r'__version__\s+=\s+(.*)', f.read())
-version = str(ast.literal_eval(match.group(1)))
-
-
 def main():
     setup(
         name='ghidra-jython-kernel',
