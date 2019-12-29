@@ -1,3 +1,5 @@
+[![Actions Status](https://github.com/AllsafeCyberSecurity/ghidra-jython-kernel/workflows/ghidra-jython-kernel%20test/badge.svg)](https://github.com/AllsafeCyberSecurity/ghidra-jython-kernel/actions)
+
 # Ghidra Jython Kernel
 
 Jupyter kernel for Ghidra's Jython.
