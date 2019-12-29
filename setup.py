@@ -110,7 +110,8 @@ def main():
         install_requires=[
             'IPython',
             'ipykernel',
-            'jupyter_client'
+            'jupyter_client',
+            'pexpect'
         ],
         packages=find_packages(),
         test_suite='tests'
