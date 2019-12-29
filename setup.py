@@ -92,16 +92,10 @@ class install_with_kernelspec(install):
             install_kernelspec(td, kernel_name)
 
 
-# get version
-with open(os.path.join(MYPACKAGE_ROOT, '__init__.py')) as f:
-    match = re.search(r'__version__\s+=\s+(.*)', f.read())
-version = str(ast.literal_eval(match.group(1)))
-
-
 def main():
     setup(
         name='ghidra-jython-kernel',
-        version=version,
+        version='0.0.4',
         description='Jupyter kernel for Ghidra\'s Jython Interpreter',
         author='er28-0652',
         author_email='33626923+er28-0652@users.noreply.github.com',
@@ -110,7 +104,8 @@ def main():
         install_requires=[
             'IPython',
             'ipykernel',
-            'jupyter_client'
+            'jupyter_client',
+            'pexpect'
         ],
         packages=find_packages(),
         test_suite='tests'
