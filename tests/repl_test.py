@@ -1,4 +1,3 @@
-import os
 import unittest
 from ghidra_jython_kernel.repl import GhidraJythonRepl
 
