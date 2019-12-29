@@ -31,5 +31,5 @@ jobs:
           apt-get update && apt-get install -y unzip
           curl https://ghidra-sre.org/$(curl -s https://ghidra-sre.org/ | grep -m1 -o "ghidra_.*.zip") -o /tmp/ghidra.zip
           unzip /tmp/ghidra.zip -d /tmp/ghidra
-          export GHIDRA_INSTALL_DIR=/tmp/ghidra
+          export GHIDRA_INSTALL_DIR=/tmp/ghidra/$(unzip -l /tmp/ghidra.zip | grep -m1 -o "ghidra_.*/$" | sed 's/\///g')
           pytest -v tests
