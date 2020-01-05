@@ -27,9 +27,12 @@ jobs:
           java-package: jdk
           architecture: x64
 
-      - name: run test
+      - name: install ghidra
         uses: er28-0652/setup-ghidra@v1
         with:
           version: '9.1.1'
-        run: |
+
+      - if: success()
+        name: run test
+        run:
           pytest -v tests
