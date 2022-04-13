@@ -74,12 +74,9 @@ ghidra.GhidraLauncher "ghidra.python.PythonRun"'.format(
     def repl(self, code):
         ''' Ghidra's Jython Interpreter REPL function. '''
 
-        file = open("/tmp/loglog","w+")
-
         # We could escape only key chars for efficiency, but brute force is safer and easier
         # e.g., "do_code()" => exec('\\x64\\x6f\\x5f\\x63\\x6f\\x64\\x65\\x28\\x29')
         hex_escaped_code = "exec('{}')".format(''.join(['\\x{:02x}'.format(ord(c)) for c in code]))
-
 
         # Insert some unique line to signify completion, this should run
         # eventually, even in any exceptional cases.
@@ -87,34 +84,22 @@ ghidra.GhidraLauncher "ghidra.python.PythonRun"'.format(
         completed_cmd = "print('# comp'+'lete {}')".format(flag) # plus sign injected so terminal echo wont match expect pattern
 
         # Run command
-        self.child.before = None
-        self.child.after = None
         self.child.sendline(hex_escaped_code + "\n" + completed_cmd)
-
-        file.write("sending => {}\n".format(hex_escaped_code + "\n" + completed_cmd))
-
-        file.write("calling expect\n")
 
         # Wait for completion
         exp = re.compile("# complete {}".format(flag))
         self.child.expect([exp], timeout=1000*1000*1000)
-
-        
-        # Return everything that's fit to print
         result = self.child.before
-
-        file.write("raw result = {}\n".format(result))
 
         # filter all control chars except newline and tab
         ccfiltered = re.sub(r'[\x00-\x08\x0b-\x1F]+', '', result)
+        # filter our two exec/print lines
         exp = re.compile('^(>>> )+(exec|print).*$', re.MULTILINE)
         metafiltered = re.sub(exp, '', ccfiltered)
+        # filter out the completed flag
         filtered = re.sub(r'# complete [0-9a-f]{32}\n','',metafiltered)
-
-        file.write("processed result = {}\n".format(filtered))
-
-        file.close()
-
+        
+        # Return everything that's fit to print
         return filtered
 
     def kill(self):
